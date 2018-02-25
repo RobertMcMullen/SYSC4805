@@ -27,7 +27,7 @@ const int pin4A = 4; //middle sensor
 const int pin3C = 5;
 const int pin2E = 6;
 
-const int lowSpeed = 25;//33
+const int lowSpeed = 33;//33 --25
 const int medSpeed = 30;//40
 const int fastSpeed = 40;//55
 
@@ -63,14 +63,14 @@ else if((FarRight == LOW) && (Right == LOW) && (Center == LOW) && (Left == LOW) 
 }
 
 //Straight Ahead
-else if((FarLeft == HIGH) && (Left == HIGH) && (Right == HIGH) && (FarRight==HIGH)){
+else if((FarLeft == HIGH) && (Left == HIGH) && (Right == HIGH) && (FarRight==HIGH) && (Center == LOW)){
   Serial.println("1"); 
   Drive(lowSpeed);
 }
 //Turn around 
 else if((FarLeft == HIGH) && (Left == HIGH) && (Right == HIGH) && (FarRight==HIGH) && (Center == HIGH) && (started == true)){
   Serial.println("0"); 
-  //turnAround(medSpeed);
+  turnAround(medSpeed);
 }
 //Hard Right or 90deg. right turn
 else if(Right == LOW && FarRight == LOW){
