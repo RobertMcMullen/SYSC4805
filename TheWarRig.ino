@@ -117,7 +117,19 @@ else if(Left == LOW && FarLeft == HIGH){
   ShiftLeft(fastSpeed,true);
 }
 
+//Easy Left or Small correction Left
+else if(Left == LOW && FarLeft == LOW){
+  Serial.println("9"); 
+  Brake();
+  ShiftLeft(fastSpeed,true);
+}
 
+//Already past the point of making a decision Keep moving fwd
+else if(FarLeft == LOW && Left== HIGH && Center == LOW && Right == HIGH){
+  Serial.println("10"); 
+  Brake();
+  Drive(lowSpeed);
+}
 
 }
 
