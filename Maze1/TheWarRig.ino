@@ -4,7 +4,9 @@
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 Adafruit_DCMotor *LeftMotor = AFMS.getMotor(3);
 Adafruit_DCMotor *RightMotor = AFMS.getMotor(4);
-
+/* 
+ * IR SENSORS 
+ * */
 int Left = LOW;
 int FarLeft = LOW;
 int FarRight = LOW;
@@ -13,6 +15,9 @@ int Center = LOW;
 
 bool started = false;
 
+/*
+ * Turn Flags
+ */
 bool turn1 = false;
 bool turn2 = false;
 bool turn3 = false;
@@ -38,6 +43,10 @@ const int pin4A = 4; //middle sensor
 const int pin3C = 5;
 const int pin2E = 6;
 
+
+/*
+ * Vehicle speeds
+ */
 const int lowSpeed = 35;//33 --25
 const int medSpeed = 40;//40
 const int fastSpeed = 47;//55
@@ -77,13 +86,15 @@ if(((FarRight == LOW) && (Right == LOW) && (Center == LOW) && (Left == LOW)) || 
   }
 }
 
-
+//First turn
 else if(turn1 == false && FarLeft == LOW){
   turn1  = true;
   turnLeft(medSpeed);
   Brake();
   delay(100);
 }
+
+//2nd turn
 else if(turn1 == true && turn2 == false && FarRight == LOW){
   turn2 = true;
   turnRight(medSpeed);
@@ -91,18 +102,23 @@ else if(turn1 == true && turn2 == false && FarRight == LOW){
   delay(100);
 }
 
+//3rd turn
 else if(turn1 == true && turn2 == true && turn3 == false && FarLeft == LOW){
   turn3 = true;
   turnLeft(medSpeed);
   Brake();
   delay(100);
 }
+
+//4th turn
 else if(turn1 == true && turn2 == true && turn3 == true && turn4 == false  && FarRight == LOW){
   turn4 = true;
   turnRight(medSpeed);
   Brake();
   delay(100);
 }
+
+//5th turn
 else if(turn1 == true && turn2 == true && turn3 == true && turn4 == true && turn5 == false && FarRight == LOW){
   turn5 = true;
   turnRight(medSpeed);
@@ -110,6 +126,7 @@ else if(turn1 == true && turn2 == true && turn3 == true && turn4 == true && turn
   delay(100);
 }
 
+//Not on any line, move fwd.
 else if((FarLeft == HIGH) && (Left == HIGH) && (Right == HIGH) && (FarRight==HIGH) && (Center == HIGH) && finished == false){
   
   Drive(medSpeed);    
@@ -193,7 +210,7 @@ else if(FarRight == LOW && Center == LOW){//Right == LOW &&
 
 
 
-void maintain(){
+void maintain(){//Used to stay on current line. 
 
   
 FarLeft = digitalRead(pin12D);
@@ -225,7 +242,7 @@ else if(Left == LOW && FarLeft == HIGH){
 
 
 
-void Drive(int speed){
+void Drive(int speed){//Move the robot fwd. this drives both motors fwd.
 //Serial.println("DRIVING");
 LeftMotor->setSpeed(speed);
 RightMotor->setSpeed(speed);
@@ -234,7 +251,7 @@ RightMotor->run(FORWARD);
 delay(100);
 }
 
-void ShiftLeft(int speed,bool dir){
+void ShiftLeft(int speed,bool dir){//Used to make left turns, the bool decides if the inside wheel should run in reverse or not
 //Serial.println("SHIFTING LEFT");
 RightMotor->setSpeed(speed);
 if(dir){
@@ -248,7 +265,7 @@ delay(200);
 Brake();
 }
 
-void ShiftRight(int speed,bool dir){
+void ShiftRight(int speed,bool dir){//Used to make right turns, the bool decides if the inside wheel should run in reverse or not
 //Serial.println("SHIFTING RIGHT");
 LeftMotor->setSpeed(speed);
 if(dir){
@@ -263,14 +280,14 @@ Brake();
 }
 
 
-void Brake(){
+void Brake(){//Used to stop the motors, this may be called before performing any motor functions to reset the motors. 
 //Serial.println("BRAKING");
 LeftMotor->run(RELEASE);
 RightMotor->run(RELEASE);
 }
 
-void turnLeft(int speed){
-//Serial.println("SHIFTING LEFT");
+void turnLeft(int speed){// Turn left until the center sensor detects the line, then it will stop. 
+
 while(true){
   RightMotor->setSpeed(speed);
   RightMotor->run(FORWARD);
@@ -284,8 +301,8 @@ Brake();
 }
 
 
-void turnRight(int speed){
-//Serial.println("SHIFTING LEFT");
+void turnRight(int speed){//Turn right untill the center sensor detects the line, then it will stop.
+
 while(true){
   LeftMotor->setSpeed(speed);
   LeftMotor->run(FORWARD);
@@ -297,7 +314,6 @@ while(true){
 delay(200);
 Brake();
 }
-
 
 
 
